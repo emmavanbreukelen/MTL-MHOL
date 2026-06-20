@@ -178,7 +178,7 @@ def main(args):
     
     # c = args.customer
 
-    df_raw = spark.table(f"DATA_PATH") # Load data file
+    df_raw = spark.table(f"PREPROCESSED_DATA_PATH") # Load data file obtained after preprocessing
  
     CAT_INT_COLS = [
         "campaign",
