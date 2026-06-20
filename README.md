@@ -11,8 +11,8 @@ The model can be used on the (publically available) Attribution Modeling for Bid
   - The coding environment used is Databricks using Databricks runtime 17.3LTS with Apache Spark 4.0.0 and Scala 2.13 running a single CPU node rd-fleet.4xlarge with 128GB of memory and 16 cores
   - Install the required packages: `pip install -r requirements.txt`
 - Set up the data:
-  - The unprocessed Criteo dataset can be found and downloaded from their website (https://ailab.criteo.com/ressources/).
-  - The data is pre-processed in `Data_Pre_Processing.py`, which performs the initial preprocessing of the Criteo dataset by creating temporal and user-behavior features, computing conversion delays, and generating delay-bucket labels for delayed-feedback modeling. It then filters late conversions, downsamples the dataset, encodes conversion-delay buckets as one-hot vectors, and saves the resulting preprocessed dataset as a table for use in the model pipeline.
+  - The raw dataset from Criteo can be found on and downloaded from the Criteo website (https://ailab.criteo.com/ressources/).
+  - This data file is pre-processed in `Data_Pre_Processing.py`, which performs the initial preprocessing of the Criteo dataset by creating temporal and user-behavior features, computing conversion delays, and generating delay-bucket labels for delayed-feedback modeling. It then filters late conversions, downsamples the dataset, encodes conversion-delay buckets as one-hot vectors, and saves the resulting preprocessed dataset as a table for use in the model pipeline.
 
 ## Usage
 - `General_Data_Processing.py` processes the preprocessed data file such that it can be used for training and testing. Besides the preprocessed data file, it also returns the maximum time horizon H and the array of bucket cutoffs.
