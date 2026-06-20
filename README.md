@@ -3,7 +3,7 @@
 This project combined a multi-head online learning model, which tackles the problem of delayed feedback, with a multi-task learning model, which handles data sparsity. Together, this model gives conversion rates predictions. The model is coded in Python.
 
 ## Data
-The model can be used on the data provided by a private marketing company for each of the four customers, as well as on the Attribution Modeling for Bidding dataset from Criteo.
+The model can be used on the Attribution Modeling for Bidding dataset from Criteo, as well as on the data provided by a private marketing company.
 
 ## Usage
 - `General_Data_Processing.py` preprocesses the raw data file such that it can be used for training and testing. Besides the preprocessed data file, it also returns the maximum time horizon H and the array of bucket cutoffs.
