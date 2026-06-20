@@ -1,6 +1,6 @@
 # Multi-Task Learning - Multi-Head Online Learning (MTL-MHOL)
 
-This project combined a multi-head online learning model, which tackles the problem of delayed feedback, with a multi-task learning model, which handles data sparsity. Together, this model gives conversion rates predictions. The model is coded in Python.
+This project combines a multi-head online learning model, which tackles the problem of delayed feedback, with a multi-task learning model, which handles data sparsity. Together, this model gives conversion rates predictions. The model is coded in Python.
 
 ## Data
 The model can be used on the Attribution Modeling for Bidding dataset from Criteo, as well as on the data from a private marketing company. Due to privacy reasons, the company data is not provided.
