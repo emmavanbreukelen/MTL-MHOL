@@ -10,6 +10,7 @@ The model can be used on the Attribution Modeling for Bidding dataset from Crite
 - `Time_Specific_Data_Processing.py` preprocesses the data file returned by `General_Data_Processing.py` for time-specific training and evaluation. It creates masks that indicate which target information is available at training and testing time. In addition, it maps unseen categorical values to "unkown" values. It outputs the data file with added mask columns.
 - `Evaluation.py` provides the evaluation metrics which are used in the evaluation of MTL-MHOL against several benchmarks. It computes Negative Log Loss (NLL) and Relative Cross Entropy (RCE).
 - `HPTuning.py` perform hyperparameter tuning using Tree-structured Parzen Estimator (TPE) with Optuna. It uses inner fold cross validation through a rolling window and selects the configuration of hyperparameters that achieve the best aggregated RCE score.
+- `HPTuner_RF.py` ...
 - `Logistic_Regression.py` trains and evaluates a logistic regression, which is used as a benchmark model in our paper. The model makes CVR predictions and returns the evaluation metrics of these predictions.
 - `DeepFM.py` implements the MTL-MHOL framework with a DeepFM workhorse model. This is used to evaluate whether our framework is agnostic to the choice of workhorse model.
 - `Flag_Models.py` implements the main MTL-MHOL model. This MLP-based architecture supports single-head (MLP), multi-task learning (MTL), mutli-head learning (MHOL), and the full MTL-MHOL model. 
