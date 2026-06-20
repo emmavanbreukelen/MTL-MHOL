@@ -1,9 +1,17 @@
 # Multi-Task Learning - Multi-Head Online Learning (MTL-MHOL)
 
-This project combines a multi-head online learning model, which tackles the problem of delayed feedback, with a multi-task learning model, which handles data sparsity. Together, this model gives conversion rates predictions. The model is coded in Python.
+This project combines a multi-head online learning model, which tackles the problem of delayed feedback, with a multi-task learning model, which handles data sparsity. Together, this model gives conversion rates predictions.
 
 ## Data
 The model can be used on the Attribution Modeling for Bidding dataset from Criteo, as well as on the data from a private marketing company. Due to privacy reasons, the company data is not provided.
+
+## Before running the code
+- Set up the programming environment:
+  - The model is coded in Python 3.12 (in Databricks)
+  - Install the required packages: `pip install -r requirements.txt`
+- Set up the data:
+  - The unprocessed Criteo dataset can be found in `Data`
+  - The data is pre-processed in `General_Data_Processing.py` and `Time_Specific_Data_Processing.py`
 
 ## Usage
 - `General_Data_Processing.py` preprocesses the raw data file such that it can be used for training and testing. Besides the preprocessed data file, it also returns the maximum time horizon H and the array of bucket cutoffs.
