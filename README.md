@@ -12,7 +12,7 @@ The model can be used on the Attribution Modeling for Bidding dataset from Crite
   - Install the required packages: `pip install -r requirements.txt`
 - Set up the data:
   - The unprocessed Criteo dataset can be found in `Data`
-  - The data is pre-processed in `General_Data_Processing.py` and `Time_Specific_Data_Processing.py`
+  - The data is pre-processed in `Data_Pre_Processing.py`
 
 ## Usage
 - `General_Data_Processing.py` preprocesses the raw data file such that it can be used for training and testing. Besides the preprocessed data file, it also returns the maximum time horizon H and the array of bucket cutoffs.
