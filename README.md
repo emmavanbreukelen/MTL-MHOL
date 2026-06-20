@@ -3,7 +3,7 @@
 This project combines a multi-head online learning model, which tackles the problem of delayed feedback, with a multi-task learning model, which handles data sparsity. Together, this model gives conversion rates predictions.
 
 ## Data
-The model can be used on the Attribution Modeling for Bidding dataset from Criteo, as well as on the data from a private marketing company. Due to privacy reasons, the company data is not provided.
+The model can be used on the (publically available) Attribution Modeling for Bidding Dataset from Criteo, as well as on the data from a private marketing company. Due to privacy reasons, the company data is not provided.
 
 ## Before running the code
 - Set up the programming environment:
@@ -11,8 +11,8 @@ The model can be used on the Attribution Modeling for Bidding dataset from Crite
   - The coding environment used is Databricks using Databricks runtime 17.3LTS with Apache Spark 4.0.0 and Scala 2.13 running a single CPU node rd-fleet.4xlarge with 128GB of memory and 16 cores
   - Install the required packages: `pip install -r requirements.txt`
 - Set up the data:
-  - The unprocessed Criteo dataset can be found in `Data`
-  - The data is pre-processed in `Data_Pre_Processing.py`
+  - The unprocessed Criteo dataset can be found and downloaded from their website (https://ailab.criteo.com/ressources/).
+  - The data is pre-processed in `Data_Pre_Processing.py`, which 
 
 ## Usage
 - `General_Data_Processing.py` preprocesses the raw data file such that it can be used for training and testing. Besides the preprocessed data file, it also returns the maximum time horizon H and the array of bucket cutoffs.
