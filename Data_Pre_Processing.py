@@ -154,14 +154,14 @@ df_final.write \
   .format("delta") \
   .mode("overwrite") \
   .option("overwriteSchema", "true") \
-  .saveAsTable("seminar_case_studies.schema_group_3.df_criteo_full")
+  .saveAsTable("INT_DATA_PATH") # Intermediate step (after first preprocessing step)
 
 
 # Downsampling and and implement cutoff
 from pyspark.sql import functions as F
 
 # Original written table
-table_name = "seminar_case_studies.schema_group_3.df_criteo_full"
+table_name = "INT_DATA_PATH" # Load the data file you obtain after the first preprocessing steps
 
 # Load table
 df_full = spark.table(table_name)
@@ -196,4 +196,4 @@ df_downsampled.write \
   .format("delta") \
   .mode("overwrite") \
   .option("overwriteSchema", "true") \
-  .saveAsTable("PREPROCESSED_DATA_FILE")
+  .saveAsTable("PREPROCESSED_DATA_PATH") # Obtain the preprocessed data which can be used in the full model pipeline
