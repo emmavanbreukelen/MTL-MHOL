@@ -36,9 +36,7 @@ def add_days(col_date, n: int):
 @dataclass(frozen=True)
 class HPTConfig:
     n_trials:            int  = 32
-    # n_jobs is intentionally 1: Spark already parallelises internally,
-    # and running Optuna trials in parallel would create competing Spark
-    # jobs that corrupt each other's timing and resource allocation.
+    # n_jobs is intentionally 1 (Spark already parallelises internally)
     n_jobs:              int  = 1
     timeout_s: Optional[int]  = None
     seed:                int  = 3
@@ -53,25 +51,12 @@ class HPTConfig:
 
 # ============================================================
 # Search space
-#
-# Rules applied here:
-#   1. Continuous/ordinal params (lr, wd, dropout, epochs) use
-#      suggest_float / suggest_int so TPE can exploit ordering.
-#   2. Truly discrete unordered params (batch_size, emb_dim,
-#      deep_hidden) use suggest_categorical.
-#   3. Every range includes the working default so TPE can
-#      always rediscover it.
-#   4. deep_hidden is a list of (width, width) tuples — both
-#      layers are kept equal for simplicity; add asymmetric
-#      options here if desired.
 # ============================================================
 
 BATCH_VALUES = [256, 512, 1024, 2048]          # default 2048 included
 EMB_DIM_VALUES = [4, 8, 16, 32]                # default 8 included
 
-# deep_hidden: list of tuples — stored/retrieved as tuples by suggest_categorical
-# Optuna serialises these as strings internally; they are cast back to tuple
-# in the objective before being passed to the model.
+# deep_hidden: list of tuples
 DEEP_HIDDEN_VALUES = [
     (256, 256),   
     (512, 512),
@@ -82,7 +67,7 @@ DEEP_HIDDEN_VALUES = [
     (256, 128, 64),
 ]
 
-# Continuous ranges — used with suggest_float / suggest_int
+# Continuous ranges
 LR_LOW,      LR_HIGH      = 1e-4,  5e-3    
 WD_LOW,      WD_HIGH      = 1e-7,  1e-3    
 DROPOUT_LOW, DROPOUT_HIGH = 0.0,   0.5    
@@ -91,9 +76,6 @@ EPOCHS_LOW,  EPOCHS_HIGH  = 10,    25
 # Aux weight range (only used when aux task is enabled)
 AUX_WEIGHT_LOW,  AUX_WEIGHT_HIGH = 0.05, 1.5   
 
-# Warm-start bandwidth: if the warm-started trial's score is within
-# BANDWIDTH_ABS of prev_best_score, run only FAST_EXTRA_TRIALS instead
-# of the full budget (assumes the previous best params transfer well).
 BANDWIDTH_ABS    = 1.0
 FAST_EXTRA_TRIALS = 12
 
@@ -122,7 +104,7 @@ def tune_hyperparameters(
     cfg = HPTConfig()
 
 
-    # Unpack fold config — all three values are in days
+    # Unpack fold config, all three values are in days
     itrain_days, val_days, istep_days = map(int, ifolds)
 
     df    = df.withColumn(START_TS, F.to_timestamp(F.col(START_TS)))
@@ -146,14 +128,12 @@ def tune_hyperparameters(
     # Fold boundary helpers
 
     def _advance_cursor_py(cursor_py, step_days: int):
-        """Advance the cursor by step_days calendar days (Spark-computed)."""
         row = spark.range(1).select(
             add_days(F.to_timestamp(F.lit(str(cursor_py))), step_days).alias("nx")
         ).first()
         return row["nx"]
 
     def _inner_fold_boundaries(cursor_py):
-        """Return Spark Column expressions for the four fold boundaries."""
         icursor     = F.to_timestamp(F.lit(str(cursor_py)))
         itrain_start = day_floor(icursor)
         itrain_end   = add_days(itrain_start, itrain_days)
@@ -161,8 +141,8 @@ def tune_hyperparameters(
         ival_end     = add_days(ival_start, val_days)
         return itrain_start, itrain_end, ival_start, ival_end
 
+    # Stop when the validation window would exceed the outer training end
     def _should_stop_inner(ival_end_col) -> bool:
-        """Stop when the validation window would exceed the outer training end."""
         return df.select((ival_end_col > outer_end_col).alias("stop")).first()["stop"]
 
     def _aggregate(scores: List[float]) -> float:
@@ -174,20 +154,15 @@ def tune_hyperparameters(
 
     def objective(trial: optuna.Trial) -> float:
 
-        # -- Search space --
-        # deep_hidden: suggest_categorical over explicit tuples.
-        # Optuna stores the chosen value as a string internally; cast back to
-        # tuple here so the model receives the correct type.
         deep_hidden_raw = trial.suggest_categorical(
             "deep_hidden", [str(v) for v in DEEP_HIDDEN_VALUES]
         )
-        # Parse "(300, 300)" → (300, 300)
         deep_hidden = tuple(
             int(x.strip()) for x in deep_hidden_raw.strip("()").split(",")
         )
 
         hparams: Dict[str, Any] = {
-            # Continuous — TPE exploits ordering via suggest_float/suggest_int
+            # Continuous
             "learning_rate":   trial.suggest_float(
                                    "learning_rate", LR_LOW, LR_HIGH, log=True),
             "l2_weight_decay": trial.suggest_float(
@@ -196,7 +171,7 @@ def tune_hyperparameters(
                                    "dropout_rate", DROPOUT_LOW, DROPOUT_HIGH, step=0.05),
             "epochs":          trial.suggest_int(
                                    "epochs", EPOCHS_LOW, EPOCHS_HIGH),
-            # Discrete unordered
+            # Discrete
             "batch_size":      trial.suggest_categorical("batch_size", BATCH_VALUES),
             "emb_dim":         trial.suggest_categorical("emb_dim", EMB_DIM_VALUES),
             # Architecture (tuple, stored as string, cast above)
@@ -287,9 +262,7 @@ def tune_hyperparameters(
     warmstart_value = None
 
     if enqueue_params:
-        # Build the enqueue dict using the same param names as the search space.
-        # deep_hidden must be the string representation so Optuna can match it
-        # against the categorical choices.
+        # Build the enqueue dict
         to_enqueue: Dict[str, Any] = {
             "learning_rate":   float(enqueue_params["learning_rate"]),
             "l2_weight_decay": float(enqueue_params["l2_weight_decay"]),
@@ -306,8 +279,6 @@ def tune_hyperparameters(
 
         study.enqueue_trial(to_enqueue)
 
-        # Run the warm-start trial alone (n_jobs=1) so we can read its value
-        # before deciding the remaining budget.
         study.optimize(
             objective,
             n_trials=1,
@@ -318,15 +289,10 @@ def tune_hyperparameters(
         )
 
         ran_warmstart = True
-        # The enqueued trial is always trial number 0 — index by number,
-        # not by position, to be safe regardless of any internal ordering.
         t0 = next(t for t in study.trials if t.number == 0)
         if t0.state.name == "COMPLETE" and t0.value is not None:
             warmstart_value = float(t0.value)
 
-    # ============================================================
-    # Decide remaining trial budget
-    # ============================================================
     if ran_warmstart and warmstart_value is not None and prev_best_score is not None:
         close = abs(warmstart_value - float(prev_best_score)) <= BANDWIDTH_ABS
         print(f"  Warm-start score: {warmstart_value:.6f} | "
@@ -343,7 +309,7 @@ def tune_hyperparameters(
         study.optimize(
             objective,
             n_trials=remaining,
-            n_jobs=cfg.n_jobs,        # always 1 — see HPTConfig note above
+            n_jobs=cfg.n_jobs,     
             timeout=cfg.timeout_s,
             gc_after_trial=True,
             show_progress_bar=True,
