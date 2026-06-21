@@ -75,8 +75,7 @@ def tune_hyperparameters_rf(
     else:
         raise ValueError(f"Unknown search_mode '{search_mode}'. Choose 'grid' or 'random'.")
 
-    # Always (re-)evaluate the previously-best value too, for
-    # warm-start continuity across outer folds.
+    # Always (re-)evaluate the previously-best value too, for warm-start continuity across outer folds
     if enqueue_params and "min_samples_leaf" in enqueue_params:
         warm_val = int(enqueue_params["min_samples_leaf"])
         if warm_val not in candidates:
