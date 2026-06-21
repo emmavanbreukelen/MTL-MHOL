@@ -70,9 +70,7 @@ def lr(
     MASK_TRAIN_COL="mask_train",
     MASK_EVAL_COL="mask_eval",
     drop_cols=("bucket", "bucket_vec", "mask_train", "mask_eval"),
-    max_delay_days: int = 12,
-    # MASK_COL="mask",   
-    # drop_cols=("bucket", "bucket_vec", "mask"),     
+    max_delay_days: int = 12,    
     **kwargs
 ):
     reg_C = 0.001
@@ -101,7 +99,6 @@ def lr(
     print("TEST base_rate spark:", test_sdf.select(F.avg(F.col(TARGET)).alias("br")).first()["br"])
     print("TEST y counts:", test_sdf.groupBy(TARGET).count().orderBy(TARGET).collect())
 
-    # Optionally drop user-provided columns (bucket vectors etc.)
     for c in drop_cols:
         if c in train_sdf.columns:
             train_sdf = train_sdf.drop(c)
