@@ -154,19 +154,19 @@ df_final.write \
   .format("delta") \
   .mode("overwrite") \
   .option("overwriteSchema", "true") \
-  .saveAsTable("INT_DATA_PATH") # Intermediate step (after first preprocessing step)
+  .saveAsTable("INTERMEDIATE_DATA_PATH") # Intermediate step (after first preprocessing step)
 
 
 # Downsampling and and implement cutoff
 from pyspark.sql import functions as F
 
 # Original written table
-table_name = "INT_DATA_PATH" # Load the data file you obtain after the first preprocessing steps
+table_name = "INTERMEDIATE_DATA_PATH" # Load the data file you obtain after the first preprocessing steps (intermediate data path)
 
 # Load table
 df_full = spark.table(table_name)
 
-BUCKET_COL = "bucket.bucket_id"  # adjust if needed
+BUCKET_COL = "bucket.bucket_id"  
 CUTOFF = 1036800    #12D cutoff for conversions  
 NEG_FRACTION = 0.75 # Downsample the negative class similarly
 SEED = 3
