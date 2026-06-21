@@ -58,9 +58,8 @@ def _fit_platt_rf(
     )
     return a, b
 
-
+# Apply a fitted Platt transform to an array of raw probabilities
 def _apply_platt_rf(probs: np.ndarray, a: float, b: float) -> np.ndarray:
-    """Apply a fitted Platt transform to an array of raw probabilities."""
     logits = _logit_scipy(np.clip(np.asarray(probs, dtype=np.float64), 1e-7, 1.0 - 1e-7))
     return _sigmoid_scipy(a * logits + b).astype(np.float64)
 
@@ -214,7 +213,7 @@ def rf(
     hparams           = None,
     # Platt calibration
     calibrate       = False,
-    platt_fit_slope = True,   # False → intercept-only; True → slope + intercept
+    platt_fit_slope = True,   # False: intercept-only; True: slope + intercept
     n_cal_days      = 1,       # days to carve from training end as calibration set
     outer           = False,
     **kwargs,
