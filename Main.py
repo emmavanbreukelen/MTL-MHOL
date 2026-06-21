@@ -35,7 +35,6 @@ MODEL_REGISTRY = {
     "deep_fm": deep_fm
 }
 
-# Added eval_ends
 def run_outer_fold(df, fold_id, train_start, train_end, test_start, test_end, eval_end, args, cuts, NUM_COLS, CAT_INT_COLS, seed, spark, prev_best_params=None, prev_best_score=None, max_delay_days=None):
     START_TS = args.start_ts  
 
