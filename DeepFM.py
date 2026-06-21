@@ -10,7 +10,7 @@ from pyspark.sql.column import Column
 
 from Evaluation import evaluation
 
-PLATT_FIT_SLOPE: bool = False   # False = intercept only (recommended default)
+PLATT_FIT_SLOPE: bool = False   # False = intercept only
                                 # True  = fit slope + intercept
 
 def plot_cvr_boxplot(
