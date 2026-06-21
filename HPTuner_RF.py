@@ -9,10 +9,8 @@ from pyspark.sql import functions as F
 from Time_Specific_Data_Processing import time_spec_data_preprocessing
 
 
-# ============================================================
-# Fold helpers (Spark) — identical semantics to HPTuning.py,
-# duplicated here so this module has no dependency on it.
-# ============================================================
+
+# Works in a similar manner as HPTuning.py, but adjusted to work for RF
 
 def day_floor(col_ts):
     return F.date_trunc("day", col_ts)
