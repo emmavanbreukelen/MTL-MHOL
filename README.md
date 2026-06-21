@@ -18,7 +18,7 @@ The model can be used on the (publically available) Attribution Modeling for Bid
 - `General_Data_Processing.py` processes the preprocessed data file such that it can be used for training and testing. Besides the processed data file, it also returns the maximum time horizon H and the array of bucket cutoffs.
 - `Time_Specific_Data_Processing.py` processes the data file returned by `General_Data_Processing.py` for time-specific training and evaluation. It creates masks that indicate which target information is available at training and testing time. In addition, it maps unseen categorical values to "unkown" values. It outputs the data file with added mask columns.
 - `Evaluation.py` provides the evaluation metrics which are used in the evaluation of MTL-MHOL against several benchmarks. It computes Negative Log Loss (NLL) and Relative Cross Entropy (RCE).
-- `Random_Forest.py` implements a complete Random Forest (RF) conversion-rate prediction pipeline, which is used as a benchmark in our paper.
+- `Random_Forest.py` implements a complete Random Forest (RF) conversion-rate prediction pipeline, which is used as a benchmark in our work.
 - `Logistic_Regression.py` trains and evaluates a logistic regression, which is used as a benchmark model in our paper. The model makes CVR predictions and returns the evaluation metrics of these predictions.
 - `DeepFM.py` implements the MTL-MHOL framework with a DeepFM workhorse model. This is used to evaluate whether our framework is agnostic to the choice of workhorse model.
 - `Flag_Models.py` implements the main MTL-MHOL model. This MLP-based architecture supports single-head (MLP), multi-task learning (MTL), mutli-head learning (MHOL), and the full MTL-MHOL model.
