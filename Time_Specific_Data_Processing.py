@@ -108,7 +108,7 @@ def time_spec_data_preprocessing(
     if aux_target is not None:
         df = df.withColumn(AUX_MASK_COL, F.lit(1))
 
-    # "unknown" categories not seen in *supervised train* rows are set to 0
+    # "unknown" categories not seen in supervised train rows are set to 0
 
     # Primary supervised if at least one bucket is mature
     if n_heads > 1:
