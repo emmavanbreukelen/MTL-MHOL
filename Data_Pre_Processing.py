@@ -84,7 +84,7 @@ def add_delay_buckets(df, time_col, n_bins=5):
 
 
 # Main function: create dataframe and add features
-df_criteo = spark.table("RAW_DATA_PATH") # Load the raw data file
+df_criteo = spark.table("RAW_DATA_PATH") # Load the raw Criteo data file
 
 # Add conversion delay
 df_criteo = df_criteo.withColumn(
