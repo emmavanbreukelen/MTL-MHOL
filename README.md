@@ -15,7 +15,7 @@ The model can be used on the (publically available) Attribution Modeling for Bid
   - This data file is pre-processed in `Data_Pre_Processing.py`, which performs the initial preprocessing of the Criteo dataset by creating temporal and user-behavior features, computing conversion delays, and generating delay-bucket labels for delayed-feedback modeling. It then filters late conversions, downsamples the dataset, encodes conversion-delay buckets as one-hot vectors, and saves the resulting preprocessed dataset as a table for use in the model pipeline.
 
 ## Usage
-- `General_Data_Processing.py` processes the preprocessed data file such that it can be used for training and testing. Besides the preprocessed data file, it also returns the maximum time horizon H and the array of bucket cutoffs.
+- `General_Data_Processing.py` processes the preprocessed data file such that it can be used for training and testing. Besides the processed data file, it also returns the maximum time horizon H and the array of bucket cutoffs.
 - `Time_Specific_Data_Processing.py` processes the data file returned by `General_Data_Processing.py` for time-specific training and evaluation. It creates masks that indicate which target information is available at training and testing time. In addition, it maps unseen categorical values to "unkown" values. It outputs the data file with added mask columns.
 - `Evaluation.py` provides the evaluation metrics which are used in the evaluation of MTL-MHOL against several benchmarks. It computes Negative Log Loss (NLL) and Relative Cross Entropy (RCE).
 - `Random_Forest.py` implements a complete Random Forest (RF) conversion-rate prediction pipeline, which is used as a benchmark in our paper.
