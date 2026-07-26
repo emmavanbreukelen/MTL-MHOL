@@ -560,14 +560,18 @@ def flag_model(
             if mh_enabled and aux_enabled:
                 m_batch                   = batch[3].to(device)
                 aux_y                     = batch[4].to(device)
+                r_batch                   = risk_set_mask(y_batch)
+                eff_mask                  = m_batch * r_batch
                 primary_logits, aux_logit = model(Xc, Xn)
-                loss = (masked_bce_with_logits(primary_logits, y_batch, m_batch)
+                loss = (masked_bce_with_logits(primary_logits, y_batch, eff_mask)
                         + hp["aux_weight"] * loss_fn(aux_logit, aux_y))
 
             elif mh_enabled:
-                m_batch = batch[3].to(device)
-                logits  = model(Xc, Xn)
-                loss    = masked_bce_with_logits(logits, y_batch, m_batch)
+                m_batch  = batch[3].to(device)
+                r_batch  = risk_set_mask(y_batch)
+                eff_mask = m_batch * r_batch
+                logits   = model(Xc, Xn)
+                loss     = masked_bce_with_logits(logits, y_batch, eff_mask)
 
             elif aux_enabled:
                 aux_y                     = batch[3].to(device)
