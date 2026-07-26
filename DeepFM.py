@@ -377,6 +377,13 @@ def masked_bce_with_logits(logits, y, m):
     per = bce(logits, y) * m
     return per.sum() / m.sum().clamp_min(1.0)
 
+def risk_set_mask(y: torch.Tensor) -> torch.Tensor:
+    prior_conversions = torch.cat(
+        [torch.zeros_like(y[:, :1]), torch.cumsum(y, dim=1)[:, :-1]],
+        dim=1,
+    )
+    return (prior_conversions == 0).float()
+
 
 # Logit collection
 def _collect_logits(
