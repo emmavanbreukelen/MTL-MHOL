@@ -31,5 +31,5 @@ The model can be used on the (publically available) Attribution Modeling for Bid
 ## References
 - Gao, H., & Yang, Y. (2022). Multi-head online learning for delayed feedback modeling. arXiv preprint arXiv:2205.12406.
 - Guo, H., Tang, R., Ye, Y., Li, Z., & He, X. (2017). DeepFM: a factorization-machine based neural network for CTR prediction. arXiv preprint arXiv:1703.04247.
-- Ma, X., Zhao, L., Huang, G., Wang, Z., Hu, Z., Zhu, X., & Gai, K. (2018, June). Entire space multi-task model: An effective approach for estimating post-click conversion rate. In The 41st International ACM SIGIR Conference on Research & Development in Information Retrieval (pp. 1137-1140).
-- Yasui, S., Morishita, G., Komei, F., & Shibata, M. (2020, April). A feedback shift correction in predicting conversion rates under delayed feedback. In Proceedings of the Web Conference 2020 (pp. 2740-2746).
+- Ma, X., Zhao, L., Huang, G., Wang, Z., Hu, Z., Zhu, X., & Gai, K. (2018). Entire space multi-task model: An effective approach for estimating post-click conversion rate. In The 41st International ACM SIGIR Conference on Research & Development in Information Retrieval (pp. 1137-1140).
+- Yasui, S., Morishita, G., Komei, F., & Shibata, M. (2020). A feedback shift correction in predicting conversion rates under delayed feedback. In Proceedings of the Web Conference 2020 (pp. 2740-2746).
