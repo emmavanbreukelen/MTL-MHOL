@@ -1,4 +1,3 @@
-
 import argparse
 import random
 import numpy as np
@@ -13,13 +12,12 @@ from Time_Specific_Data_Processing import time_spec_data_preprocessing
 from Logistic_regression import lr
 from Flag_models import flag_model
 from DeepFM import deep_fm
+from Stem_models import stem_model
 from HPTuning import tune_hyperparameters
 from HPTuner_RF import tune_hyperparameters_rf
 from random_forest import rf
-
-# -----------------------------
-# Fold utilities
-# -----------------------------
+from FSIW import fsiw
+from ESMM import esmm
 
 def day_floor(col_ts):
     return F.date_trunc("day", col_ts)
@@ -30,6 +28,8 @@ def add_days(col_date, n):
 MODEL_REGISTRY = {
     "lr": lr,
     "rf": rf,
+    "fsiw": fsiw,
+    "esmm": esmm, 
     "stem_model": stem_model,
     "flag_model": flag_model,
     "deep_fm": deep_fm
@@ -155,9 +155,6 @@ def average_evaluation_metrics(eval_metrics_folds: dict) -> pd.DataFrame:
     df = pd.concat([df, pd.DataFrame([avg_row])], ignore_index=True)
     return df
    
-# -----------------------------
-# Main
-# -----------------------------
 
 def main(args):
     print("START")
@@ -173,11 +170,9 @@ def main(args):
     torch.backends.cudnn.benchmark = False
 
     spark = SparkSession.builder.getOrCreate()
-    
-    # c = args.customer
 
-    df_raw = spark.table(f"PREPROCESSED_DATA_PATH") # Load data file obtained after preprocessing
- 
+    df_raw = spark.table(f"seminar_case_studies.schema_group_3.criteo_model_dataset_h12")
+
     CAT_INT_COLS = [
         "campaign",
         "cat1", "cat2", "cat3", "cat4", "cat5", "cat6", "cat7", "cat8", "cat9",
@@ -198,13 +193,12 @@ def main(args):
 
     if args.event_ts != "conversion_timestamp_dt":
         df_raw = df_raw.withColumnRenamed("conversion_timestamp_dt", args.event_ts)
-  
+
     df_clean, H, CUTS = pre_process_data(
         df=df_raw,
         CAT_INT_COLS = CAT_INT_COLS,
         NUM_COLS = NUM_COLS,
         aux_target=args.aux_target,
-        # n_buckets=args.n_buckets,
         HEAD_COL = ["bucket_vec"]
     )
     print(df_clean.columns)
@@ -224,20 +218,18 @@ def main(args):
     last_impression = df_clean.agg(F.max(F.col(START_TS)).alias("mx")).first()["mx"]
     if last_impression is None:
         raise ValueError("last_impression is None (no conversion event timestamps).")
-
-    first_session = df_clean.agg(F.min(F.col(START_TS)).alias("mn")).first()["mn"]
+    first_session = "2025-01-04 00:00:00"
     if first_session is None:
         raise ValueError("first_session is None (no start timestamps).")
     
     cursor0 = first_session
+
     train_days, test_days, step_days = args.ofolds  
 
     print("Outer fold params (days):", dict(train_days=train_days, test_days=test_days,step_days=step_days)) 
     print("Data time span (impressions):", first_session, "→", df_clean.agg(F.max(F.col(START_TS))).first()[0])
-    # print("Data time span (conversions):", df_clean.agg(F.min(F.col(EVENT_TS))).first()[0], "→", last_impression)
     print("Data time span (conversions):", df_clean.agg(F.min(F.col(EVENT_TS))).first()[0], "→", eval_end)
 
-    # Iterate folds (framework only)
     fold_id = 0
     eval_metrics_folds={}
     best_params_folds={}  
@@ -247,7 +239,6 @@ def main(args):
     while True:
         fold_id += 1
 
-        # Define fold boundaries day-aligned (not month-aligned)
         cursor = F.to_timestamp(F.lit(str(cursor0)))
         train_start = day_floor(cursor)                      
         train_end   = add_days(train_start, train_days)      
@@ -262,7 +253,7 @@ def main(args):
 
         if should_stop:
             break
-        
+      
         eval_metrics, best_params, best_score = run_outer_fold(
             df=df_clean,
             fold_id=fold_id,
@@ -291,8 +282,7 @@ def main(args):
         # update so next fold can use the best params of previous folds
         prev_best_params = best_params
         prev_best_score = best_score
-
-        # Advance cursor0 by step_days for the next fold
+        
         next_cursor0 = (
             df_clean
             .select(add_days(F.to_timestamp(F.lit(str(cursor0))), step_days).alias("nx"))
@@ -305,22 +295,20 @@ def main(args):
     print(summary_df.to_string(index=False))
     print("Done.")
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--aux_target", type=str, default=None, help="Enable auxiliary target in preprocessing: Binary: click; No AUX: None ")
+    parser.add_argument("--aux_target", type=str, default="click", help="Enable auxiliary target in preprocessing: Binary: click; No AUX: None ")
     parser.add_argument("--hptuning", action="store_true", default=True, help="Enable hyperparameter tuning")
-    parser.add_argument("--calibrate", action="store_true", default=True, help="Enable calibration")
+    parser.add_argument("--calibrate", action="store_true", default=False, help="Enable calibration")
     parser.add_argument("--n_buckets", type=int, default=1, help="4: multi-head, 1: single-head")
-    parser.add_argument("--model", type=str, default="rf", help="Select model: [rf: random_forest, lr: Logistic_regression, stem_model: Multitask_Stem, flag_model: Flag_models, deep_fm: DeepFM]")
+    parser.add_argument("--model", type=str, default="esmm", help="Select model: [rf: random_forest, lr: Logistic_regression, fsiw: FISW, stem_model: Multitask_Stem, flag_model: Flag_models, deep_fm: DeepFM, esmm: ESMM]")
 
-    # Column names (keep configurable)
     parser.add_argument("--start_ts", type=str, default="timestamp_dt")
     parser.add_argument("--event_ts", type=str, default="conversion_timestamp_dt")
 
-    # Outer fold params
-    # [train_days, test_days, step_days]
     parser.add_argument(
         "--ofolds",
         nargs=3,
@@ -330,8 +318,6 @@ if __name__ == "__main__":
         help="Outer folds in DAYS: TRAIN_D TEST_D STEP_D. Example: --ofolds 24 6 1"
 )
 
-    # Inner fold params
-    # [train_days, test_days, step_days]
     parser.add_argument(
         "--ifolds",
         nargs=3,
