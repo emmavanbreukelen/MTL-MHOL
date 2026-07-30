@@ -171,7 +171,7 @@ def main(args):
 
     spark = SparkSession.builder.getOrCreate()
 
-    df_raw = spark.table(f"seminar_case_studies.schema_group_3.criteo_model_dataset_h12")
+    df_raw = spark.table(f"XXXXXXX")
 
     CAT_INT_COLS = [
         "campaign",
