@@ -171,7 +171,7 @@ def main(args):
 
     spark = SparkSession.builder.getOrCreate()
 
-    df_raw = spark.table(f"XXXXXXX")
+    df_raw = spark.table(f"PREPROCESSED_DATA_PATH")
 
     CAT_INT_COLS = [
         "campaign",
