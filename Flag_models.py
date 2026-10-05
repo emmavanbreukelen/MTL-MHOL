@@ -45,6 +45,13 @@ def _safe_log1p_nonneg(x: np.ndarray) -> np.ndarray:
     return np.log1p(np.clip(x, 0, None))
 
 
+def risk_set_mask(y: torch.Tensor) -> torch.Tensor:
+    prior_conversions = torch.cat(
+        [torch.zeros_like(y[:, :1]), torch.cumsum(y, dim=1)[:, :-1]],
+        dim=1,
+    )
+    return (prior_conversions == 0).float()
+
 
 # Platt calibration
 # (only called when calibrate=True)
