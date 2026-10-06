@@ -1,6 +1,6 @@
 # Multi-Task Learning - Multi-Head Online Learning (MTL-MHOL)
 
-This research introduces the Multi-Task Learning Multi-Head Online Learning (MTL-MHOL) framework. This framework combines a multi-head online learning model, which tackles the problem of delayed feedback, with a multi-task learning model, which handles data sparsity. Together, this model gives conversion rate predictions.
+This research introduces the Multi-Task Learning Multi-Head Online Learning (**MTL-MHOL**) framework. This framework combines a multi-head online learning model, which tackles the problem of delayed feedback, with a multi-task learning model, which handles data sparsity. Together, this model gives conversion rate predictions.
 <p align="center">
   <img src="Figures/Visualisation MTL MHOL.png" width="500">
   <br>
