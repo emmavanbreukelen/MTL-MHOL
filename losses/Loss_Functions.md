@@ -20,9 +20,7 @@ This is the average negative log-likelihood over all mature, at-risk observation
 
 The risk-set restriction is essential: without it, each head converges toward the marginal
 
-$$
-P(y_{ib}=1 \mid X_i)
-$$
+$$P(y_{ib}=1 \mid X_i)$$
 
 rather than the conditional hazard.
 
@@ -38,25 +36,11 @@ The mask is 1 by default and is set to 0 only when a maturity timestamp is avail
 
 The resulting loss is
 
-$$
-\mathcal{L}_{\mathrm{aux}}^{\mathrm{binary}}
-=
--\frac{1}{\sum_{i=1}^{N}a_i}
-\sum_{i=1}^{N}
-a_i
-\left[
-y_i^{\mathrm{aux}}\log(\hat{h}_i^{\mathrm{aux}})
-+
-(1-y_i^{\mathrm{aux}})
-\log(1-\hat{h}_i^{\mathrm{aux}})
-\right],
-$$
+$$\mathcal{L}_{\mathrm{aux}}^{\mathrm{binary}}= -\frac{1}{\sum_{i=1}^{N}a_i} \sum_{i=1}^{N} a_i \left[ y_i^{\mathrm{aux}}\log(\hat{h}_i^{\mathrm{aux}}) + (1-y_i^{\mathrm{aux}}) \log(1-\hat{h}_i^{\mathrm{aux}}) \right], $$
 
 where $\hat{h}_i^{\mathrm{aux}}$ is the predicted probability that
 
-$$
-y_i^{\mathrm{aux}} = 1.
-$$
+$$y_i^{\mathrm{aux}} = 1.$$
 
 ### Continuous Auxiliary Target
 
@@ -64,38 +48,11 @@ For a continuous auxiliary target, the auxiliary head predicts $Q$ conditional q
 
 Let $\hat{y}_{\tau_q,i}^{\mathrm{aux}}$ be the predicted conditional quantile at level
 
-$$
-\tau_q \in (0,1),
-\qquad
-q=1,\ldots,Q.
-$$
+$$\tau_q \in (0,1),\qquadq=1,\ldots,Q.$$
 
 The pinball loss is
 
-$$
-\mathcal{L}_{\mathrm{pinball}}
-=
-\frac{1}
-{\left(\sum_{i=1}^{N}a_i\right)Q}
-\sum_{i=1}^{N}
-a_i
-\sum_{q=1}^{Q}
-\max
-\left(
-\tau_q
-\left(
-y_i^{\mathrm{aux}}
--
-\hat{y}_{\tau_q,i}^{\mathrm{aux}}
-\right),
-(\tau_q-1)
-\left(
-y_i^{\mathrm{aux}}
--
-\hat{y}_{\tau_q,i}^{\mathrm{aux}}
-\right)
-\right).
-$$
+$$ \mathcal{L}_{\mathrm{pinball}} = \frac{1}{\left(\sum_{i=1}^{N}a_i\right)Q} \sum_{i=1}^{N} a_i \sum_{q=1}^{Q} \max \left( \tau_q \left( y_i^{\mathrm{aux}} -\hat{y}_{\tau_q,i}^{\mathrm{aux}}\right),(\tau_q-1)\left(y_i^{\mathrm{aux}}-\hat{y}_{\tau_q,i}^{\mathrm{aux}}\right)\right).$$
 
 The pinball loss applies an asymmetric penalty to target each conditional quantile of the auxiliary distribution.
 
@@ -114,8 +71,7 @@ $$
 The penalty is
 
 $$
-\mathcal{P}
-=
+\mathcal{P} =
 \frac{1}
 {\left(\sum_{i=1}^{N}a_i\right)(Q-1)}
 \sum_{i=1}^{N}
@@ -124,8 +80,7 @@ a_i
 \max
 \left(
 0,
-\hat{y}_{\tau_q,i}^{\mathrm{aux}}
--
+\hat{y}_{\tau_q,i}^{\mathrm{aux}}-
 \hat{y}_{\tau_{q+1},i}^{\mathrm{aux}}
 \right).
 $$
@@ -133,10 +88,8 @@ $$
 The combined auxiliary loss is
 
 $$
-\mathcal{L}_{\mathrm{aux}}^{\mathrm{distr}}
-=
-\mathcal{L}_{\mathrm{pinball}}
-+
+\mathcal{L}_{\mathrm{aux}}^{\mathrm{distr}}=
+\mathcal{L}_{\mathrm{pinball}}+
 \gamma\mathcal{P},
 $$
 
