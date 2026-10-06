@@ -1,6 +1,6 @@
-# Multi-Task Learning - Multi-Head Online Learning (MTL-MHOL)
+# MTL-MHOL: Predicting Online Conversions under Delayed Feedback and Data Sparsity
 
-This research introduces the Multi-Task Learning Multi-Head Online Learning (**MTL-MHOL**) framework. This framework combines a multi-head online learning model, which tackles the problem of delayed feedback, with a multi-task learning model, which handles data sparsity. Together, this model gives conversion rate predictions.
+This repository contains the implementation of **MTL-MHOL** (Multi-Task Learning Multi-Head Online Learning), a framework for conversion rate (CVR) prediction that jointly addresses delayed feedback and data sparsity in online advertising.
 <p align="center">
   <img src="Figures/Visualisation MTL MHOL.png" width="500">
   <br>
@@ -10,8 +10,34 @@ This research introduces the Multi-Task Learning Multi-Head Online Learning (**M
 ## Abstract
 This paper proposes the model-agnostic Multi-Task Learning Multi-Head Online Learning (MTL-MHOL) framework for conversion rate (CVR) prediction. Existing approaches typically address key challenges in CVR prediction, such as delayed feedback and data sparsity, in isolation or lack flexibility and practical applicability. MTL-MHOL adopts a time bucketing approach to account for delayed feedback and combines it with multi-task learning of an auxiliary task to mitigate data sparsity. We evaluate the framework on proprietary datasets from a private company and on a public dataset from Criteo. MTL-MHOL matches or outperforms all benchmark models in terms of Negative Log-Likelihood (NLL) and Relative Cross Entropy (RCE), and it correctly captures temporal trends in the data using an MLP backbone, while maintaining strong performance with a DeepFM backbone. In particular, MTL-MHOL matches the performance of the advanced delayed-feedback method FSIW, outperforms the entire-space approach ESMM by 21.5\% in RCE, and achieves up to 81\% lift in RCE compared to the best-performing classical benchmark.
 
-## Datasets
-The model can be used on the (publically available) Attribution Modeling for Bidding Dataset from Criteo, as well as on the data from a private marketing company. Due to privacy reasons, the company data is not provided.
+## Overview
+
+MTL-MHOL combines two complementary components:
+
+- **Multi-Head Online Learning (MHOL):** The conversion horizon is partitioned into mutually exclusive delay buckets. A dedicated head estimates a bucket-specific hazard probability for each bucket, with maturity masking and risk-set restriction ensuring that only eligible observations contribute to each head's training loss. Bucket-level hazards are aggregated into an overall CVR estimate via a survival-based formulation.
+
+- **Multi-Task Learning (MTL):** An auxiliary engagement task is trained jointly with the primary CVR task via hard parameter-sharing, enriching the shared trunk with a denser supervision signal. The auxiliary target is either binary (e.g., click indicator) or continuous (e.g., log-transformed number of distinct pages visited), where the continuous case uses a multi-quantile regression head with a soft monotonicity penalty.
+
+The framework is model-agnostic within the neural network family and is demonstrated with both MLP and DeepFM backbones.
+
+## Repository Structure
+```
+├── data/               # Data loading and preprocessing pipelines
+├── models/             # MLP and DeepFM backbone implementations
+├── losses/             # Primary task loss, auxiliary task loss, joint loss
+├── evaluation/         # Rolling window cross-validation, NLL, RCE, PR-AUC
+├── baselines/          # FSIW and ESMM benchmark implementations
+├── experiments/        # Training scripts and hyperparameter optimization
+└── notebooks/          # Exploratory analysis and result visualization
+```
+
+## Results
+Evaluated on a public Criteo attribution dataset and two proprietary session-level customer datasets under rolling window cross-validation, MTL-MHOL:
+
+- Matches the performance of the neural delayed-feedback baseline FSIW and outperforms the entire-space baseline ESMM by 21.5% in RCE on Criteo
+- Achieves up to 81% higher RCE than the best classical baseline (LR)
+- Correctly captures dataset-specific temporal conversion patterns across delay buckets
+- Maintains strong performance across both MLP and DeepFM backbones
 
 ## Install Instructions
 - Set up the programming environment:
@@ -21,20 +47,37 @@ The model can be used on the (publically available) Attribution Modeling for Bid
 - Set up the data:
   - The unprocessed dataset from Criteo can be found on and downloaded from the Criteo website (https://ailab.criteo.com/ressources/).
   - This data file is pre-processed in `Data_Pre_Processing.py`, which performs the initial preprocessing of the Criteo dataset by creating temporal and user-behavior features, computing conversion delays, and generating delay-bucket labels for delayed-feedback modeling. It then filters late conversions, downsamples the dataset, encodes conversion-delay buckets as one-hot vectors, and saves the resulting preprocessed dataset as a table for use in the model pipeline.
+ 
+## Citation
 
-## Usage
-- `General_Data_Processing.py` processes the preprocessed data file such that it can be used for training and testing. Besides the processed data file, it also returns the maximum time horizon H and the array of bucket cutoffs.
-- `Time_Specific_Data_Processing.py` processes the data file returned by `General_Data_Processing.py` for time-specific training and evaluation. It creates masks that indicate which target information is available at training and testing time. In addition, it maps unseen categorical values to "unkown" values. It outputs the data file with added mask columns.
-- `Evaluation.py` provides the evaluation metrics which are used in the evaluation of MTL-MHOL against several benchmarks. It computes Negative Log Loss (NLL) and Relative Cross Entropy (RCE).
-- `random_forest.py` implements a complete Random Forest (RF) conversion-rate prediction pipeline, which is used as a benchmark in our work.
-- `Logistic_regression.py` trains and evaluates a logistic regression, which is used as a benchmark model in our work. The model makes CVR predictions and returns the evaluation metrics of these predictions.
-- `ESMM.py` implements an Entire Space Multi-Task Model (ESMM), where click-through rate and click-through-and-conversion rate are learned jointly over all impressions, and their relationship is used to estimate conversion rates. ESMM serves as a benchmark model.
-- `FSIW.py` employs the Feedback Shift Importance Weighting (FSIW) model, which corrects delayed conversion feedback by reweighting training samples according to the probability that their observed labels are correct. FSIW is used as a benchmark model in our work.
-- `DeepFM.py` implements the MTL-MHOL framework with a DeepFM workhorse model. This is used to evaluate whether our framework is agnostic to the choice of workhorse model.
-- `Flag_models.py` implements the main MTL-MHOL model. This MLP-based architecture supports single-head (MLP), multi-task learning (MTL), mutli-head learning (MHOL), and the full MTL-MHOL model.
-- `HPTuning.py` performs hyperparameter tuning using Tree-structured Parzen Estimator (TPE) with Optuna. It uses inner fold cross validation through a rolling window and selects the configuration of hyperparameters that achieve the best aggregated RCE score.
-- `HPTuner_RF.py` performs hyperparamter tuning in the same way as `HPTuning.py`, but is adjusted to work for RF so this module has no dependency on it.
-- `Main.py` runs the full pipline. It loads the preprocessed datasets, creates rolling outer train and test fold, tunes the hyperparameters in the inner folds, and trains and tests the selected model on each fold. It evaluates the performance and summarizes the results across the folds. Moreover, it outputs the evaluation metrics per fold as well as the overall average performance summary.
+If you use this code in your research, please cite:
+
+```bibtex
+@article{tejeravicente2026mtlmhol,
+  title     = {MTL-MHOL: Predicting Online Conversions under Delayed
+               Feedback and Data Sparsity},
+  author    = {Tejera Vicente, Mario and Hagen, Eva and
+               van Breukelen, Emma and van de Vijver, Quinten and
+               Gruber, Kathrin},
+  journal   = {Transactions on Machine Learning Research},
+  year      = {2026}
+}
+```
+
+## Requirements
+
+```
+torch==2.7.0
+numpy==2.1.3
+pandas==2.2.3
+scikit-learn==1.6.1
+optuna==3.6.1
+lightgbm
+```
+
+## License
+
+This project is released under the MIT License.
 
 ## References
 - [Multi-head online learning for delayed feedback modeling.](https://arxiv.org/pdf/2205.12406)
