@@ -14,17 +14,7 @@ $$\omega_{ib} = m_{ib}r_{ib}.$$
 
 The loss for bucket $b$ is
 
-$$\mathcal{L}_{\mathrm{CE}_b}
-=
--\frac{1}{\sum_{i=1}^{N}\omega_{ib}}
-\sum_{i=1}^{N}
-\omega_{ib}
-\left[
-y_{ib}\log(\hat{h}_{ib})
-+
-(1-y_{ib})\log(1-\hat{h}_{ib})
-\right].
-$$
+$$\mathcal{L}_{\mathrm{CE}_b} = -\frac{1}{\sum_{i=1}^{N}\omega_{ib}} \sum_{i=1}^{N} \omega_{ib} \left[ y_{ib}\log(\hat{h}_{ib}) + (1-y_{ib})\log(1-\hat{h}_{ib})n\right]. $$
 
 This is the average negative log-likelihood over all mature, at-risk observations in bucket $b$.
 
