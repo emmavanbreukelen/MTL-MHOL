@@ -10,14 +10,11 @@ Let $y_{ib} \in \{0,1\}$, $m_{ib} \in \{0,1\}$, and $r_{ib} \in \{0,1\}$ denote 
 
 The joint eligibility weight is
 
-$
-\omega_{ib} = m_{ib}r_{ib}.
-$
+$$\omega_{ib} = m_{ib}r_{ib}.$$
 
 The loss for bucket $b$ is
 
-$$
-\mathcal{L}_{\mathrm{CE}_b}
+$$\mathcal{L}_{\mathrm{CE}_b}
 =
 -\frac{1}{\sum_{i=1}^{N}\omega_{ib}}
 \sum_{i=1}^{N}
