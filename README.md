@@ -38,18 +38,8 @@ Evaluated on a public Criteo attribution dataset and two proprietary session-lev
 - Achieves up to 81% higher RCE than the best classical baseline (LR)
 - Correctly captures dataset-specific temporal conversion patterns across delay buckets
 - Maintains strong performance across both MLP and DeepFM backbones
-
-## Install Instructions
-- Set up the programming environment:
-  - The model is coded in Python 3.12.
-  - The coding environment used is Databricks using Databricks runtime 17.3LTS with Apache Spark 4.0.0 and Scala 2.13 running a single CPU node rd-fleet.4xlarge with 128GB of memory and 16 cores.
-  - Install the required packages: `pip install -r requirements.txt`.
-- Set up the data:
-  - The unprocessed dataset from Criteo can be found on and downloaded from the Criteo website (https://ailab.criteo.com/ressources/).
-  - This data file is pre-processed in `Data_Pre_Processing.py`, which performs the initial preprocessing of the Criteo dataset by creating temporal and user-behavior features, computing conversion delays, and generating delay-bucket labels for delayed-feedback modeling. It then filters late conversions, downsamples the dataset, encodes conversion-delay buckets as one-hot vectors, and saves the resulting preprocessed dataset as a table for use in the model pipeline.
  
 ## Citation
-
 If you use this code in your research, please cite:
 
 ```bibtex
@@ -65,7 +55,6 @@ If you use this code in your research, please cite:
 ```
 
 ## Requirements
-
 ```
 torch==2.7.0
 numpy==2.1.3
