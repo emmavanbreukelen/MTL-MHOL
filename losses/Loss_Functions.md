@@ -48,7 +48,7 @@ For a continuous auxiliary target, the auxiliary head predicts $Q$ conditional q
 
 Let $\hat{y}_{\tau_q,i}^{\mathrm{aux}}$ be the predicted conditional quantile at level
 
-$$\tau_q \in (0,1),\qquadq=1,\ldots,Q.$$
+$$\tau_q \in (0,1), \qquadq=1,\ldots,Q.$$
 
 The pinball loss is
 
