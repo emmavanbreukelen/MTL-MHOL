@@ -2,7 +2,7 @@
 
 This repository contains the implementation of **MTL-MHOL** (Multi-Task Learning Multi-Head Online Learning), a framework for conversion rate (CVR) prediction that jointly addresses delayed feedback and data sparsity in online advertising.
 <p align="center">
-  <img src="Figures/Visualisation MTL MHOL.png" width="400">
+  <img src="notebooks/Visualisation MTL MHOL.png" width="400">
   <br>
   <em>Figure 1: Visualisation of MTL-MHOL.</em>
 </p>
