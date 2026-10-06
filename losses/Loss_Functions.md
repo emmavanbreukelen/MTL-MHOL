@@ -10,9 +10,9 @@ Let $y_{ib} \in \{0,1\}$, $m_{ib} \in \{0,1\}$, and $r_{ib} \in \{0,1\}$ denote 
 
 The joint eligibility weight is
 
-$$
+$
 \omega_{ib} = m_{ib}r_{ib}.
-$$
+$
 
 The loss for bucket $b$ is
 
