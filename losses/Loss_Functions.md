@@ -62,36 +62,15 @@ The pinball loss applies an asymmetric penalty to target each conditional quanti
 
 To ensure that the predicted quantiles form a valid conditional distribution, a soft monotonicity penalty is added to penalize violations of
 
-$$
-\hat{y}_{\tau_q,i}^{\mathrm{aux}}
-\leq
-\hat{y}_{\tau_{q+1},i}^{\mathrm{aux}}.
-$$
+$$\hat{y}_{\tau_q,i}^{\mathrm{aux}}\leq\hat{y}_{\tau_{q+1},i}^{\mathrm{aux}}.$$
 
 The penalty is
 
-$$
-\mathcal{P} =
-\frac{1}
-{\left(\sum_{i=1}^{N}a_i\right)(Q-1)}
-\sum_{i=1}^{N}
-a_i
-\sum_{q=1}^{Q-1}
-\max
-\left(
-0,
-\hat{y}_{\tau_q,i}^{\mathrm{aux}}-
-\hat{y}_{\tau_{q+1},i}^{\mathrm{aux}}
-\right).
-$$
+$$\mathcal{P} =\frac{1}{\left(\sum_{i=1}^{N}a_i\right)(Q-1)}\sum_{i=1}^{N}a_i\sum_{q=1}^{Q-1}\max\left(0,\hat{y}_{\tau_q,i}^{\mathrm{aux}}-\hat{y}_{\tau_{q+1},i}^{\mathrm{aux}}\right).$$
 
 The combined auxiliary loss is
 
-$$
-\mathcal{L}_{\mathrm{aux}}^{\mathrm{distr}}=
-\mathcal{L}_{\mathrm{pinball}}+
-\gamma\mathcal{P},
-$$
+$$\mathcal{L}_{\mathrm{aux}}^{\mathrm{distr}}=\mathcal{L}_{\mathrm{pinball}}+\gamma\mathcal{P},$$
 
 where $\gamma \geq 0$ controls the strength of the monotonicity penalty.
 
@@ -101,13 +80,7 @@ where $\gamma \geq 0$ controls the strength of the monotonicity penalty.
 
 The overall training objective for bucket $b$ is
 
-$$
-\mathcal{L}_b
-=
-\mathcal{L}_{\mathrm{CE}_b}
-+
-\lambda_{\mathrm{aux}}\mathcal{L}_{\mathrm{aux}},
-$$
+$$\mathcal{L}_b=\mathcal{L}_{\mathrm{CE}_b}+\lambda_{\mathrm{aux}}\mathcal{L}_{\mathrm{aux}},$$
 
 where $\lambda_{\mathrm{aux}}$ scales the auxiliary contribution and
 
