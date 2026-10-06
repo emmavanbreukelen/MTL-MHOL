@@ -22,12 +22,12 @@ The framework is model-agnostic within the neural network family and is demonstr
 
 ## Repository Structure
 ```
+├── baselines/          # LR, RF, FSIW and ESMM benchmark implementations
 ├── data/               # Data loading and preprocessing pipelines
-├── models/             # MLP and DeepFM backbone implementations
-├── losses/             # Primary task loss, auxiliary task loss, joint loss
 ├── evaluation/         # Rolling window cross-validation, NLL, RCE, PR-AUC
-├── baselines/          # FSIW and ESMM benchmark implementations
 ├── experiments/        # Training scripts and hyperparameter optimization
+├── losses/             # Primary task loss, auxiliary task loss, joint loss
+├── models/             # MLP and DeepFM backbone implementations
 └── notebooks/          # Exploratory analysis and result visualization
 ```
 
