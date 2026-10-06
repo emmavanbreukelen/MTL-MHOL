@@ -5,6 +5,9 @@ This project combines a multi-head online learning model, which tackles the prob
 ## Abstract
 This paper proposes the model-agnostic Multi-Task Learning Multi-Head Online Learning (MTL-MHOL) framework for conversion rate (CVR) prediction. Existing approaches typically address key challenges in CVR prediction, such as delayed feedback and data sparsity, in isolation or lack flexibility and practical applicability. MTL-MHOL adopts a time bucketing approach to account for delayed feedback and combines it with multi-task learning of an auxiliary task to mitigate data sparsity. We evaluate the framework on proprietary datasets from a private company and on a public dataset from Criteo. MTL-MHOL matches or outperforms all benchmark models in terms of Negative Log-Likelihood (NLL) and Relative Cross Entropy (RCE), and it correctly captures temporal trends in the data using an MLP backbone, while maintaining strong performance with a DeepFM backbone. In particular, MTL-MHOL matches the performance of the advanced delayed-feedback method FSIW, outperforms the entire-space approach ESMM by 21.5\% in RCE, and achieves up to 81\% lift in RCE compared to the best-performing classical benchmark.
 
+## Datasets
+The model can be used on the (publically available) Attribution Modeling for Bidding Dataset from Criteo, as well as on the data from a private marketing company. Due to privacy reasons, the company data is not provided.
+
 ## Install Instructions
 - Set up the programming environment:
   - The model is coded in Python 3.12.
@@ -13,9 +16,6 @@ This paper proposes the model-agnostic Multi-Task Learning Multi-Head Online Lea
 - Set up the data:
   - The unprocessed dataset from Criteo can be found on and downloaded from the Criteo website (https://ailab.criteo.com/ressources/).
   - This data file is pre-processed in `Data_Pre_Processing.py`, which performs the initial preprocessing of the Criteo dataset by creating temporal and user-behavior features, computing conversion delays, and generating delay-bucket labels for delayed-feedback modeling. It then filters late conversions, downsamples the dataset, encodes conversion-delay buckets as one-hot vectors, and saves the resulting preprocessed dataset as a table for use in the model pipeline.
-
-## Datasets
-The model can be used on the (publically available) Attribution Modeling for Bidding Dataset from Criteo, as well as on the data from a private marketing company. Due to privacy reasons, the company data is not provided.
 
 ## Usage
 - `General_Data_Processing.py` processes the preprocessed data file such that it can be used for training and testing. Besides the processed data file, it also returns the maximum time horizon H and the array of bucket cutoffs.
