@@ -38,6 +38,28 @@ Evaluated on a public Criteo attribution dataset and two proprietary session-lev
 - Achieves up to 81% higher RCE than the best classical baseline (LR)
 - Correctly captures dataset-specific temporal conversion patterns across delay buckets
 - Maintains strong performance across both MLP and DeepFM backbones
+
+### Predictive performance
+
+Mean predictive performance across folds for MTL-MHOL, its ablation variants
+(MHOL, MTL, MLP), and the ESMM, FSIW, LR and RF benchmarks. Standard deviations
+across folds are shown in parentheses. **Best result in each column in bold.**
+
+| Model | Criteo NLL ↓ | Criteo RCE ↑ | Customer 1 NLL ↓ | Customer 1 RCE ↑ | Customer 2 NLL ↓ | Customer 2 RCE ↑ |
+|:------|-------------:|-------------:|-----------------:|-----------------:|-----------------:|-----------------:|
+| **MTL-MHOL** | **0.1215 (0.0092)** | **36.704 (0.874)** | **0.1318 (0.0059)** | **4.621 (1.804)** | **0.0937 (0.0060)** | **11.962 (1.467)** |
+| MHOL | 0.1222 (0.0094) | 36.282 (0.895) | 0.1330 (0.0059) | 3.752 (1.804) | 0.0949 (0.0057) | 10.821 (0.666) |
+| MTL | 0.1350 (0.0052) | 29.499 (2.874) | 0.1331 (0.0047) | 3.733 (0.525) | 0.0946 (0.0058) | 11.107 (1.689) |
+| MLP | 0.1362 (0.0065) | 28.880 (2.098) | 0.1334 (0.0079) | 3.486 (1.776) | 0.0953 (0.0061) | 10.437 (1.926) |
+| FSIW | 0.1221 (0.0086) | 36.357 (1.025) | — | — | — | — |
+| ESMM | 0.1337 (0.0053) | 30.189 (3.017) | — | — | — | — |
+| RF | 0.1684 (0.0061) | 12.049 (3.230) | 0.1332 (0.0049) | 3.602 (0.132) | 0.0979 (0.0055) | 7.981 (0.319) |
+| LR | 0.1527 (0.0068) | 20.295 (2.565) | 0.1353 (0.0057) | 2.053 (0.865) | 0.0976 (0.0058) | 8.293 (1.051) |
+
+*Table: Mean predictive performance across folds. Standard deviations across
+folds are shown in parentheses. ↓ indicates lower is better; ↑ indicates higher
+is better. Results for multi-head variants on the private data may be slightly
+biased; see the implementation details in the paper.*
  
 ## Citation
 If you use this code in your research, please cite:
