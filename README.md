@@ -38,28 +38,113 @@ Evaluated on a public Criteo attribution dataset and two proprietary session-lev
 - Achieves up to 81% higher RCE than the best classical baseline (LR)
 - Correctly captures dataset-specific temporal conversion patterns across delay buckets
 - Maintains strong performance across both MLP and DeepFM backbones
+<table>
+  <thead>
+    <tr>
+      <th rowspan="2">Model</th>
+      <th colspan="2" align="center">Criteo</th>
+      <th colspan="2" align="center">Customer 1</th>
+      <th colspan="2" align="center">Customer 2</th>
+    </tr>
+    <tr>
+      <th align="center">NLL ↓</th>
+      <th align="center">RCE ↑</th>
+      <th align="center">NLL ↓</th>
+      <th align="center">RCE ↑</th>
+      <th align="center">NLL ↓</th>
+      <th align="center">RCE ↑</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>MTL-MHOL</strong></td>
+      <td align="center"><strong>0.1215</strong><br><sub><strong>(0.0092)</strong></sub></td>
+      <td align="center"><strong>36.704</strong><br><sub><strong>(0.874)</strong></sub></td>
+      <td align="center"><strong>0.1318</strong><br><sub><strong>(0.0059)</strong></sub></td>
+      <td align="center"><strong>4.621</strong><br><sub><strong>(1.804)</strong></sub></td>
+      <td align="center"><strong>0.0937</strong><br><sub><strong>(0.0060)</strong></sub></td>
+      <td align="center"><strong>11.962</strong><br><sub><strong>(1.467)</strong></sub></td>
+    </tr>
 
-### Predictive performance
+    <tr>
+      <td>MHOL</td>
+      <td align="center">0.1222<br><sub>(0.0094)</sub></td>
+      <td align="center">36.282<br><sub>(0.895)</sub></td>
+      <td align="center">0.1330<br><sub>(0.0059)</sub></td>
+      <td align="center">3.752<br><sub>(1.804)</sub></td>
+      <td align="center">0.0949<br><sub>(0.0057)</sub></td>
+      <td align="center">10.821<br><sub>(0.666)</sub></td>
+    </tr>
 
-Mean predictive performance across folds for MTL-MHOL, its ablation variants
-(MHOL, MTL, MLP), and the ESMM, FSIW, LR and RF benchmarks. Standard deviations
-across folds are shown in parentheses. **Best result in each column in bold.**
+    <tr>
+      <td>MTL</td>
+      <td align="center">0.1350<br><sub>(0.0052)</sub></td>
+      <td align="center">29.499<br><sub>(2.874)</sub></td>
+      <td align="center">0.1331<br><sub>(0.0047)</sub></td>
+      <td align="center">3.733<br><sub>(0.525)</sub></td>
+      <td align="center">0.0946<br><sub>(0.0058)</sub></td>
+      <td align="center">11.107<br><sub>(1.689)</sub></td>
+    </tr>
 
-| Model | Criteo NLL ↓ | Criteo RCE ↑ | Customer 1 NLL ↓ | Customer 1 RCE ↑ | Customer 2 NLL ↓ | Customer 2 RCE ↑ |
-|:------|-------------:|-------------:|-----------------:|-----------------:|-----------------:|-----------------:|
-| **MTL-MHOL** | **0.1215 (0.0092)** | **36.704 (0.874)** | **0.1318 (0.0059)** | **4.621 (1.804)** | **0.0937 (0.0060)** | **11.962 (1.467)** |
-| MHOL | 0.1222 (0.0094) | 36.282 (0.895) | 0.1330 (0.0059) | 3.752 (1.804) | 0.0949 (0.0057) | 10.821 (0.666) |
-| MTL | 0.1350 (0.0052) | 29.499 (2.874) | 0.1331 (0.0047) | 3.733 (0.525) | 0.0946 (0.0058) | 11.107 (1.689) |
-| MLP | 0.1362 (0.0065) | 28.880 (2.098) | 0.1334 (0.0079) | 3.486 (1.776) | 0.0953 (0.0061) | 10.437 (1.926) |
-| FSIW | 0.1221 (0.0086) | 36.357 (1.025) | — | — | — | — |
-| ESMM | 0.1337 (0.0053) | 30.189 (3.017) | — | — | — | — |
-| RF | 0.1684 (0.0061) | 12.049 (3.230) | 0.1332 (0.0049) | 3.602 (0.132) | 0.0979 (0.0055) | 7.981 (0.319) |
-| LR | 0.1527 (0.0068) | 20.295 (2.565) | 0.1353 (0.0057) | 2.053 (0.865) | 0.0976 (0.0058) | 8.293 (1.051) |
+    <tr>
+      <td>MLP</td>
+      <td align="center">0.1362<br><sub>(0.0065)</sub></td>
+      <td align="center">28.880<br><sub>(2.098)</sub></td>
+      <td align="center">0.1334<br><sub>(0.0079)</sub></td>
+      <td align="center">3.486<br><sub>(1.776)</sub></td>
+      <td align="center">0.0953<br><sub>(0.0061)</sub></td>
+      <td align="center">10.437<br><sub>(1.926)</sub></td>
+    </tr>
 
-*Table: Mean predictive performance across folds. Standard deviations across
-folds are shown in parentheses. ↓ indicates lower is better; ↑ indicates higher
-is better. Results for multi-head variants on the private data may be slightly
-biased; see the implementation details in the paper.*
+    <tr>
+      <td>FSIW</td>
+      <td align="center">0.1221<br><sub>(0.0086)</sub></td>
+      <td align="center">36.357<br><sub>(1.025)</sub></td>
+      <td align="center">—</td>
+      <td align="center">—</td>
+      <td align="center">—</td>
+      <td align="center">—</td>
+    </tr>
+
+    <tr>
+      <td>ESMM</td>
+      <td align="center">0.1337<br><sub>(0.0053)</sub></td>
+      <td align="center">30.189<br><sub>(3.017)</sub></td>
+      <td align="center">—</td>
+      <td align="center">—</td>
+      <td align="center">—</td>
+      <td align="center">—</td>
+    </tr>
+
+    <tr>
+      <td>RF</td>
+      <td align="center">0.1684<br><sub>(0.0061)</sub></td>
+      <td align="center">12.049<br><sub>(3.230)</sub></td>
+      <td align="center">0.1332<br><sub>(0.0049)</sub></td>
+      <td align="center">3.602<br><sub>(0.132)</sub></td>
+      <td align="center">0.0979<br><sub>(0.0055)</sub></td>
+      <td align="center">7.981<br><sub>(0.319)</sub></td>
+    </tr>
+
+    <tr>
+      <td>LR</td>
+      <td align="center">0.1527<br><sub>(0.0068)</sub></td>
+      <td align="center">20.295<br><sub>(2.565)</sub></td>
+      <td align="center">0.1353<br><sub>(0.0057)</sub></td>
+      <td align="center">2.053<br><sub>(0.865)</sub></td>
+      <td align="center">0.0976<br><sub>(0.0058)</sub></td>
+      <td align="center">8.293<br><sub>(1.051)</sub></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  <sub>
+    Mean predictive performance across folds. Standard deviations across folds
+    are shown in parentheses. <strong>Best result in each column in bold.</strong>
+    ↓ indicates lower is better; ↑ indicates higher is better.
+  </sub>
+</p>
  
 ## Citation
 If you use this code in your research, please cite:
